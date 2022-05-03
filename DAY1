@@ -1,0 +1,64 @@
+安装easygui模块只需要在 Terminal 处 粘贴
+pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple easygui
+出现 successful 就成功了
+
+"""
+多行注释了内容，以下是 easygui 模块的-使用按钮获得输入
+import easygui
+flavor = easygui.buttonbox("What is your favorite ice cream flavor?",
+                           choices =['Vanilla','Chocolate','Strawberry'])
+esaygui.msgbox("You picked" + flavor)
+"""
+
+"""
+以下是 easygui 模块的-使用选择框获得输入
+import easygui
+flavor = easygui.choicebox("What is your favorite ice cream flavor?",
+                           choices =['Vanilla','Chocolate','Straberry'])
+easygui.msgbox("You picked " + flavor)
+"""
+
+# 以下是 easygui 模块的-使用输入框获得输入
+import easygui
+flavor = easygui.enterbox("What is your favorite ice cream flavor?",
+                          default = 'Vanilla')
+                              # 创建默认值
+easygui.msgbox("You entered " + flavor)
+
+
+
+# 猜数字游戏
+import random,easygui
+secret = random.randint(1,100)
+guess = 0
+tries = 0
+# 长字符串则使用“”“  ”“”
+easygui.msgbox("""AHOY! I'm the Dread Pirate Robers,and I have a secret!
+               It is a number frim 1 to 100. I'll give you 6 times.""")
+while guess != secret and tries < 6:
+                             #注意：上方的random范围其实是 1-99，所以这里添加上界
+    guess =easygui.integerbox("What's yer guess,matey?",upperbound = 100)
+    if not guess: break
+    if guess < secret:
+                   #这里直接强制性转换成字符串了，那就是本来长什么样，现在长什么样
+        easygui.msgbox(str(guess) + " is too low, ye scurvy dog!")
+    elif guess > secret:
+        easygui.msgbox(str(guess) + " is too high, landlubber!")
+    tries = tries + 1
+if guess == secret:
+    easygui.msgbox("Avast! Yegot it! Found my secret, ye did!")
+else:
+    easygui.msgbox("No more guesses! The number was " + str(secret))
+    
+    
+#一个小题的题解
+print("Which multiplication table would you like?")
+num1 = int(input())
+print("How high do you want to go?")
+num2 = int(input())
+begin = int(1)
+while begin <= num2:
+    end = int(num1 * begin)
+    print(num1,"*",begin,"=",end)
+    begin += 1
+    
