@@ -1,0 +1,128 @@
+#嵌套循环
+numBlocks = int(input('How many blocks of stars do you want? '))
+numLines = int(input('How many lines in each block? '))
+numStars = int(input('How many starts per line? '))
+for block in range(0,numBlocks):
+    for line in range(0,numLines):
+        for star in range(0,numStars):
+            #让星星连起来
+            print('*',end=' ')
+        #一行的星星跟下一行不连
+        print()
+    #控制大块分区
+    print()
+
+#倒计时器
+import time
+for i in range(10,0,-1):
+    print(i)
+    time.sleep(1)
+print("BLAST OFF!")
+
+列表
+my_list = [5,10,56,'hello',another_list]
+中括号里的是列表成员
+
+#列表分片--列表分片其实是获取另一个列表，即改变新列表不改变原列表
+letters = ['a','b','c','d','e']
+print(type(letters[1]))  #'str'
+print(type(letters[1:2]))  #'list'
+
+#修改元素
+letters = ['a','b','c','d','e']
+letters[2] = 'z'
+print(letters) #['a','b','z','d','e']
+letters[5] = 'z'  #无效！超出索引范围
+
+#添加新元素 -- append extend insert
+friends = ['a', 'b', 'c', 'd', 'e']
+# append extend 都只能在末尾添加新元素
+friends.append('a')  #一次只能添加一个元素
+print(friends)  #['a', 'b', 'c', 'd', 'e', 'a']
+friends.append(['b','c'])  #列表也属于一个元素
+print(friends)  #['a', 'b', 'c', 'd', 'e', 'a', ['b', 'c']]
+friends.extend(['p','q','r'])
+print(friends)  #['a', 'b', 'c', 'd', 'e', 'a', ['b', 'c'], 'p', 'q', 'r']
+friends.insert(2,'z')  # 2 是索引，也就是第三个元素
+print(friends)  #['a', 'b', 'z', 'c', 'd', 'e', 'a', ['b', 'c'], 'p', 'q', 'r']
+
+#删除元素 -- remove del pop
+friends = ['a', 'b', 'c', 'd', 'e']
+friends.remove('c')  #删除你不想要的元素
+print(friends)  #['a', 'b', 'd', 'e']
+del friends[1]  #删除指定索引元素
+print(friends)  #['a', 'd', 'e']
+refriends = friends.pop()  #pop的功能最为强大，还包含了del的功能
+print(friends)  #pop 删除最后一个元素  ['a', 'd']
+print(refriends)  #pop 可以将最后一个元素显示出来  e
+refriends = friends.pop(0)
+print(friends)  #['d']
+print(refriends)  #a
+
+#搜索某个元素
+if 'a' in friends:
+    print("found 'a' in friends")
+else:
+    print("didn't find 'a' in friends")
+
+
+#列表顺序 -- sort reverse sorted
+friends = ['c','a', 'b','k', 'e','d']
+#sort 如果元素是字符串，就会按照字母表中的顺序排序
+#     如果元素是数字，就会按从小到大的顺序排列
+#sort 是直接对原列表进行修改
+#print(friends.sort())
+friends.sort()
+print(friends)  #['a', 'b', 'c', 'd', 'e', 'k']
+#reverse 逆序排列
+friends.reverse()
+print(friends)  #['k', 'e', 'd', 'c', 'b', 'a']
+#列表分片 改变副本不会改变原本
+new = friends[:]
+print(new)  #['k', 'e', 'd', 'c', 'b', 'a']
+new.sort()
+print(friends)  #['k', 'e', 'd', 'c', 'b', 'a']
+print(new)  #['a', 'b', 'c', 'd', 'e', 'k']
+#sorted 可以跟 列表分片 有一样的功能 -- 少写一行
+renew = sorted(friends)
+print(friends)  #['k', 'e', 'd', 'c', 'b', 'a']
+print(renew)  #['a', 'b', 'c', 'd', 'e', 'k']
+
+#字典 -- 键(key)  值(value)
+#键不能是可变量，即不能是：列表 字典
+#空字典
+phoneNumbers = {}
+phoneNumbers['John'] = '555-1234'  #引号其实可以去掉
+phoneNumbers['Bob'] = '444-4321'
+phoneNumbers['Jenny'] = '876-5309'
+phoneNumbers['Mary'] = '555-6789'
+print(phoneNumbers)  #{'John': '555-1234', 'Bob': '444-4321', 'Jenny': '876-5309', 'Mary': '555-6789'}
+#字典是用键来寻值的！
+#print(phoneNumbers[0])  erroe
+print(phoneNumbers['John'])  #555-1234
+#列出所有键 所有值
+phoneNumbers.keys()  #dict_key(['John'])  不是真正的列表
+phoneNumbers.values()  #dict_value(['555-1234'])
+#字典没有直接的排序方法，但是可以通过改变 键 的顺序，然后改变 值
+#注意 -s 循环部分需要全部用上，所以是 .keys / .values
+#       条件判断部分只需要用上一个，所以是 [key]
+for value in sorted(phoneNumbers.values()):
+    for key in phoneNumbers.keys():
+        #上面就是这样赋值的！！！
+        if phoneNumbers[key] == value:
+            print(key,phoneNumbers[key])
+"""
+Bob 444-4321
+John 555-1234
+Mary 555-6789
+Jenny 876-5309
+"""
+#用del删除
+del phoneNumbers['John']
+print(phoneNumbers)
+#用in判断是否存在某个键
+'John' in phoneNumbers  #False
+#用clear清理所空字典
+phoneNumbers.clear()
+print(phoneNumbers)
+
