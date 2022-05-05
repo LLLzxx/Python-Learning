@@ -1,0 +1,96 @@
+#函数 function
+def printMyAddress():
+    print("Warren Sande")
+    print("123-456")
+    print()  #相当于空一行
+printMyAddress()  #函数有参数arugment 之后，无参数的函数将不可用
+printMyAddress()
+print("OK")
+"""
+Warren Sande
+123-456
+
+Warren Sande
+123-456
+
+OK
+"""
+
+def printMyAddress(myName):
+    print(myName)
+    print("Warren Sande")
+    print("123-456")
+    print()  #相当于空一行
+printMyAddress("LZXX")
+printMyAddress("GLLL")
+"""
+LZXX
+Warren Sande
+123-456
+
+GLLL
+Warren Sande
+123-456
+"""
+
+#注意 局部变量 和 全局变量 的区别
+def calculateTax(price,tax_rate):
+    # global taxTotal = price + (price * tax_rate) -- error --
+    # global 全局变量关键字
+    global taxTotal 
+    taxTotal = price + (price * tax_rate)
+    my_price = 1000
+    print("my_price (inside function) = ",my_price)
+    return taxTotal
+my_price = float(input("Enter a price: "))
+totalPrice = calculateTax(my_price,0.06)
+print("price = ",my_price," Total price = ",totalPrice)
+print("my_price (outside function) = ",my_price)
+print(taxTotal) # 局部变量--错误 ， 声明为全局变量--正确
+"""
+# Enter a price: 7.99
+
+my_price (inside function) =  1000
+price =  7.99  Total price =  8.4694
+my_price (outside function) =  7.99
+8.4694
+"""
+
+#列表练习题
+#要先建立一个空列表
+name = []
+print("Enter 5 names: ")
+i = 5
+while i > 0:
+    name.append(input())
+    i -= 1
+print("The name are ",end ="")
+#print里面写列表名，就可以打印出列表的样子
+print(name)
+new_name = name[:]
+new_name.sort()
+print(new_name)
+print("Enter the name you want to replace: ",end = "")
+#注意这里的数字舒服，只能这样子 -- 如果不需要输入可以直接写 num = 1
+num = int(input())
+new_num = num - 1
+print("The name you want to remove is :",new_name[new_num])
+print("Enter a new name please:",end = "")
+#同理，输入字符串也只能这样子
+NewName = str(input())
+new_name[new_num] = NewName
+print(new_name)
+"""
+Enter 5 names: 
+end
+yes
+and
+or
+key
+The name are ['end', 'yes', 'and', 'or', 'key']
+['and', 'end', 'key', 'or', 'yes']
+Enter the name you want to replace: 4
+The name you want to remove is : or
+Enter a new name please:LZXX
+['and', 'end', 'key', 'LZXX', 'yes']
+"""
