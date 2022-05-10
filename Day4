@@ -1,0 +1,192 @@
+# 对象 object
+# 对象 = 属性 + 方法
+# 对象的属性示例
+ball.color
+ball.size
+ball.weight
+# 对象的方法示例
+ball.kick()
+ball.throw()
+ball.inflate()
+
+# 类 -- 关于对象的蓝图
+# 我们可以用蓝图盖很多房子
+class Ball:
+    #初始化 initializing
+    def __init__(self,color,size,direction):
+        self.color = color
+        self.size = size
+        self.direction = direction
+    #告诉 Python 在打印对象时，具体要打印哪些内容
+    # <__main__.Ball object at 0x00BB83A0>
+    def __str__(self):
+        msg = "Hi, I'm a " + self.size + " " + self.color + " ball !"
+        return msg
+    def bounce(self):
+        if self.direction == "down":
+            self.direction = "up"
+        else:
+            self.direction = "down"
+
+# Ball类的实例
+myBall = Ball("red","small","down")
+# self -- 我们可以用蓝图盖很多房子
+yourBall = Ball("blue","big","up")
+#---------太过冗长---------
+# myBall = Ball()
+# myBall.direction = "down"
+# myBall.color = "red"
+# myBall.size = "small"
+#---------太过冗长---------
+
+print(myBall)  # Hi, I'm a small red ball !
+print(yourBall)  # Hi, I'm a big blue ball !
+#---------太过冗长---------
+# print("My ball is",myBall.size)
+# print("My ball is",myBall.color)
+# print("My ball's direction is",myBall.direction)
+# print("Now I'm going to bounce the ball")
+# print()
+#---------太过冗长---------
+
+# 括号中没有任何参数 -- 所以我们换一种表达形式，如：yourBall
+myBall.bounce()
+print("Now the ball's direction is",myBall.direction)
+Ball.bounce(yourBall)
+print("Now the ball's direction is",yourBall.direction)
+
+
+
+热狗实例：
+class HotDog:
+    def __init__(self):
+        self.cooked_level = 0
+        self.cooked_string = "Raw"
+        self.condiments = []
+    def __str__(self):
+        msg = "hot dog"
+        if len(self.condiments) > 0:
+            msg = msg + " with "
+        for i in self.condiments:
+            msg = msg + i + ","
+        msg = msg.strip(", ")
+        msg = self.cooked_string + " " + msg + "."
+        # strip 函数使用方法 -- 只能删除开头或是结尾的字符，不能删除中间部分的字符!
+        # str = "00000003210Runoob01230000000";
+        # print
+        # str.strip('0');  # 去除首尾字符 0  --  3210Runoob0123
+        #
+        # str2 = "   Runoob      ";  # 去除首尾空格  --  Runoob
+        # print
+        # str2.strip();
+
+        return msg
+    def cook(self, time):
+        self.cooked_level = self.cooked_level + time
+        if self.cooked_level > 8:
+            self.cooked_string = "Charcoal"
+        elif self.cooked_level > 5:
+            self.cooked_string = "Well-done"
+        elif self.cooked_level > 3:
+            self.cooked_string = "Medium"
+        else:
+            self.cooked_string = "Raw"
+    def addCondiment(self,condiment):
+        self.condiments.append(condiment)
+
+myDog = HotDog()
+print(myDog)
+print("Cooking hot dog for 4 minutes ...")
+fir_time_cook = int(input())
+myDog.cook(fir_time_cook)
+print(myDog)
+print("Cooking hot dog for 3 more minutes ...")
+myDog.cook(3)
+print(myDog)
+#Question -- Well-done hot dog with ketchup, mustard. -- 怎么实现的？
+myDog.addCondiment("ketchup")
+myDog.addCondiment("mustard")
+print(myDog)
+
+
+
+#多态（polymorphism) 和 继承（inheritance)
+# polymorphism -- 方法名相同，行为不同
+class Triangle:
+    def __init__(self,width,height):
+        self.width = width
+        self.height = height
+
+    def getArea(self):
+        area = self.width * self.height /2.0
+        return area
+
+class Square:
+    def __init__(self,size):
+        self.size = size
+
+    def getArea(self):
+        area = self.size * self.size
+        return area
+
+myTriangle = Triangle(4,5)
+print(myTriangle.getArea())
+mySquare = Square(7)
+print(Square.getArea(mySquare))
+
+
+
+# inheritance -- 向父母学习
+# 从其他类继承的属性或者方法，被称为：派生类(derived class)  或者  子类(subclass)
+class GameObject:
+    def __init__(self,name):
+        self.name = name
+    def pickUp(self,player):
+        pass  # 代码桩(code stub) 占位符
+        # 在此键入代码，将对象添加到玩家的物品集合中
+
+# Coin类 是 GameObject类 的子类
+class Coin(GameObject):
+    def __init__(self,value):
+        #在 __init__（） 方法中，继承 GameObject类 的初始化方法并补充新内容
+        GameObject.__init__(self,"coin")
+        self.value = value
+    # Coin类 中新的 spend() 方法
+    def spend(self,buyer,seller):
+        pass  # 代码桩(code stub) 占位符
+        # 在此处键入代码，从买家的钱中扣除硬币，
+        # 将硬币添加到卖家的钱中
+
+
+
+# 模块(module) -- 相当于这个函数可以在另一个头文件里面用
+# 只需要用上关键字 import
+# 还有 在调用函数时 多加一个前缀
+
+# main.py
+def c_to_f(celsius):
+    fahrenheit = celsius * 9.0 / 5 +32
+    return fahrenheit
+
+# test.py
+import my_module
+celsius = float(input("Enter a temperature in Celsius: "))
+# 重点在这里
+fahrenheit = my_module.c_to_f(celsius)
+print("That's" , fahrenheit, "degrees Fahrenheit")
+
+
+
+
+# 导入命名空间
+import stephen_leacock
+call_to_office(stephen_leacock.Fred)
+
+from stephen_leacock import Fred
+call_to_office(Fred)
+
+# 如果想将全部的 Fred 叫进来
+    #   p176   --没看懂
+    
+    
+    
