@@ -1,0 +1,165 @@
+# 长河落日圆
+import pygame,sys,random
+pygame.init()
+# 创建了一个 宽980，高520 的像素窗口
+screen = pygame.display.set_mode([980,520])
+screen.fill([255,255,230])
+# 分别对应 R G B ，其数值区间是 0-255 （一个字节 = 8个bit 二进制值为256）
+# screen.fill([255,255,255]) -- 白色背景
+# 画个圆 -- 用函数
+# RED 对应的 RGB 代码就是[255,0,0]
+# [100,100] 屏幕坐标：从左到右100像素，从上到下100像素
+# 30 ⚪的半径
+# 0 线宽(width)：表示粗细
+from pygame.color import THECOLORS
+pygame.draw.circle(screen, [190,70,50], [150,250], 60, 0)
+# pygame.draw.circle(screen,THECOLOR["red"],[100,100],30,0)
+left = 0
+top = 410
+for i in range(1000):
+    variety_top = random.randint(-6,7)
+    variety_left = random.randint(0, 5)
+    left += variety_left
+    top -= variety_top
+    pygame.draw.rect(screen,[195,240,237],[left,top,40,40],100)
+pygame.display.flip()
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+pygame.quit()
+
+
+
+# 现代艺术
+import pygame,sys,random
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+screen.fill([0,0,0])
+for i in range (100):
+    width = random.randint(0,250)
+    height = random.randint(0,100)
+    top = random.randint(0,400)
+    left = random.randint(0,500)
+    from pygame.color import THECOLORS
+    color_name = random.choice(list(THECOLORS.keys()))
+    color = THECOLORS[color_name]
+    line_width = random.randint(1,3)
+    pygame.draw.rect(screen,color,[left,top,width,height],line_width)
+
+pygame.display.flip()
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+pygame.quit()
+
+
+
+# 正弦函数
+import pygame, sys
+# 导入数学模块
+import math
+pygame.init()
+screen = pygame.display.set_mode([720,480])
+# 创建存放点的列表
+plotPoints = []
+for x in range(0,640):
+    y = int(math.sin(x/640 * 4 * math.pi) * 200 +240)
+    plotPoints.append([x,y])
+    # 法一：用密集的点
+    #pygame.draw.rect(screen,[250,250,250],[x,y,1,1],1)
+# 法二：用线连点
+# 原型：pygame.draw.lines(Surface, color, closed, pointlist, width=1): return Rect
+# 用途：用于绘制一系列直线段。
+# closed是一个布尔变量，如果closed为真，那么表示需要把第一点和最后一点连接起来。
+pygame.draw.lines(screen,[255,255,255],False,plotPoints,2)
+# 只改变某个点的颜色
+#screen.set_at([x,y],[0,0,0])
+pygame.display.flip()
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+pygame.quit()
+
+
+
+
+# 沙雕球
+
+# 块移（Blit) -- 将一个图像（也可以是图像的一部分），复制屏幕上
+screen.blit(my_ball,[x,y])
+# 显示图片 -- Pygame 窗口中有两个副本，，处理动画时，我们希望尽可能流畅，显示速度尽可能快，
+# 用 切换(flip) -- 等到图形做出足够多的改动，再切换到最新版本
+pygame.display.flip()
+
+
+#流畅移动的沙雕球
+import pygame,sys
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+screen.fill([255,255,230])
+# 从硬盘加载一张图片
+my_ball = pygame.image.load("beach_ball.png")
+x = 50
+y = 50
+
+# 如果循环太大会突破边界 -- 有 反弹 或者 翻转 的方法
+for looper in range (1,100):
+    # 利用 “块移” 和 “切换” 让球动起来
+    pygame.time.delay(20)
+    # 计算机图形 跟 水彩 一样，只能用别的颜色将之覆盖
+    # 如果原背景图很复杂，可以考虑重绘整个场景
+    pygame.draw.rect(screen, [255, 255, 230], [x, y, 90, 90], 0)
+    x += 5
+    screen.blit(my_ball, [x,y])
+    pygame.display.flip()
+
+running = True
+while running:
+    # 程序会随着事件的进行运行下去，直到你 × 了为止
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+pygame.quit()
+
+
+
+# 反弹的沙雕球
+import pygame,sys
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+screen.fill([255,255,230])
+# 从硬盘加载一张图片
+my_ball = pygame.image.load("beach_ball.png")
+x = 50
+y = 50
+x_speed = 10
+
+running = True
+while running:
+    # 程序会随着事件的进行运行下去，直到你 × 了为止
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # 利用 “块移” 和 “切换” 让球动起来
+    pygame.time.delay(20)
+    # 计算机图形 跟 水彩 一样，只能用别的颜色将之覆盖
+    # 如果原背景图很复杂，可以考虑重绘整个场景
+    pygame.draw.rect(screen, [255, 255, 230], [x, y, 90, 90], 0)
+    x += x_speed
+    if x >screen.get_width() - 90 or x < 0:
+        # 速度方向相反了
+        x_speed = -x_speed
+    # 块移（Blit) -- 将一个图像（也可以是图像的一部分），复制屏幕上
+    screen.blit(my_ball, [x, y])
+    # 显示图片 -- Pygame 窗口中有两个副本，，处理动画时，我们希望尽可能流畅，显示速度尽可能快，
+    # 用 切换(flip) -- 等到图形做出足够多的改动，再切换到最新版本
+    pygame.display.flip()
+
+pygame.quit()
