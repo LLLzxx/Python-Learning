@@ -1,0 +1,87 @@
+# 二维反弹沙雕球
+import pygame,sys
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+screen.fill([255,255,230])
+# 从硬盘加载一张图片
+my_ball = pygame.image.load("beach_ball.png")
+x = 50
+y = 50
+x_speed = 10
+y_speed = 19
+running = True
+while running:
+    # 程序会随着事件的进行运行下去，直到你 × 了为止
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # 利用 “块移” 和 “切换” 让球动起来
+    pygame.time.delay(20)
+    # 计算机图形 跟 水彩 一样，只能用别的颜色将之覆盖
+    # 如果原背景图很复杂，可以考虑重绘整个场景
+    pygame.draw.rect(screen, [255, 255, 230], [x, y, 90, 90], 0)
+    x += x_speed
+    y += y_speed
+    if x >screen.get_width() - 90 or x < 0:
+        # 速度方向相反了
+        x_speed = -x_speed
+    if y > screen.get_height() - 90 or y < 0:
+        # 速度方向相反了
+        y_speed = -y_speed
+    # 块移（Blit) -- 将一个图像（也可以是图像的一部分），复制屏幕上
+    screen.blit(my_ball, [x, y])
+    # 显示图片 -- Pygame 窗口中有两个副本，，处理动画时，我们希望尽可能流畅，显示速度尽可能快，
+    # 用 切换(flip) -- 等到图形做出足够多的改动，再切换到最新版本
+    pygame.display.flip()
+
+pygame.quit()
+
+
+
+# 翻转沙雕球
+import pygame,sys
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+screen.fill([255,255,230])
+my_ball = pygame.image.load("beach_ball.png")
+x = 50
+y = 50
+x_speed = 5
+y_speed = 5
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    pygame.time.delay(100)
+    pygame.draw.rect(screen,[255,255,230],[x,y,90,90],0)
+    x += x_speed
+    y += y_speed
+    if x >screen.get_width():
+        x = 0  # 如果是 0，球会直接出现在左边界
+    if y >screen.get_height():
+        y = -90  #如果是 -90（－球半径），球就会慢慢出现
+    screen.blit(my_ball,[x,y])
+    pygame.display.flip()
+pygame.quit()
+
+
+
+# Sprite类
+# 是基于pygame.sprite 模块提供的一个动画精灵基类
+# 但是我们一般使用 pygame.sprite.Sprite 的子类 -- 如：Ball
+class Ball(pygame.sprite.Sprite):
+    def __init__(self,image_file,location):
+        # 初始化动画精灵
+        pygame.sprite.Sprite.__init__(self)
+        # 在动画精灵中加载文件
+        self.image = pygame.image.load(image_file)
+        # 得到定义图象边界的矩形
+        self_rect = self.image.get_rect()
+        # 设置球的初始位置
+        self.rect.left,self.rect.top = location
+        
+        
+
+### 其实还有学，但是去搞视频彩铃比赛了<--> ###
