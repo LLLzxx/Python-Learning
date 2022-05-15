@@ -1,0 +1,83 @@
+# 相互碰撞后会反弹的沙雕球--碰撞检测
+import sys,pygame
+from random import choice
+# pygame.init()无论是否实际需要初始化模块，都可以安全地初始化所有导入的pygame模块。
+# 但是，由于这样做的确有效，因此省去了手动手动初始化每个模块的麻烦。
+pygame.init()
+class Ball(pygame.sprite.Sprite):
+    def __init__(self,image_file,location,speed):
+        pygame.sprite.Sprite.__init__(self)
+        # . 是原本模块中得子块
+        # _ 是起的新名字，防止跟系统关键字重叠
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left,self.rect.top = location
+        self.speed = speed
+
+    def move(self):
+        self.rect = self.rect.move(self.speed)
+        if self.rect.left < 0 or self.rect.right > width:
+            self.speed[0] = -self.speed[0]
+        if self.rect.top < 0 or self.rect.bottom > height:
+            self.speed[1] = -self.speed[1]
+
+def animate(group):
+    screen.fill([255,255,230])
+    # 使用Sprite模块中的Group类绘制一个区域或部分精灵
+    for ball in group:
+        ball.remove()
+    for ball in group:
+        # 从动画精灵组中 删除动画精灵
+        group.remove(ball)
+        if pygame.sprite.spritecollide(ball,group,False):
+            ball.speed[0] = -ball.speed[0]
+            ball.speed[1] = -ball.speed[1]
+        # 将球添加到原来得动画精灵组中
+        group.add(ball)
+        ball.move()
+        screen.blit(ball.image,ball.rect)
+    pygame.display.flip()
+    # 控制 动画的运行速度 = 运行（未知） 或 延迟（已知）循环体中的代码的时间
+    # 1s = 1000ms  帧数=1000/每个循环需要的时间
+    #pygame.time.delay(20)
+
+size = width,height = 640,480
+screen = pygame.display.set_mode(size)
+screen.fill([255,255,230])
+#img_file = "beach_ball.png"
+# 并没有实现像素的完美碰撞！
+img_file = "b_ball_rect.png"
+# 可控制帧速率
+clock = pygame.time.Clock()
+# 创建动画精灵组
+group = pygame.sprite.Group()
+# balls = []
+for row in range(0,2):
+    for column in range (0,2):
+        location = [column * 180 + 10,row * 180 +10]
+        speed = [choice([-5,5]),choice([-5,5])]
+        ball = Ball(img_file,location,speed)
+        # 将每个球添加到动画精灵组中
+        group.add(ball)
+        # balls.append(ball)
+want_time = 30
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            # 检查帧速率
+            frame_rate = clock.get_fps()
+            print("frame rate =", frame_rate)
+
+    animate(group)
+    # clock.tick（）函数控制了帧速率（受计算机运行速度限制）
+    clock.tick(want_time)
+    # pygame.time.delay(20)
+    # 直接重绘了整个屏幕！
+    # screen.fill([255, 255, 230])
+    # for ball in balls:
+    #     ball.move()
+    #     screen.blit(ball.image, ball.rect)
+    # pygame.display.flip()
+pygame.quit()
