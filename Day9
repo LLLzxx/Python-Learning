@@ -1,0 +1,202 @@
+# 事件--对发生的事情做出响应
+# 事件队列--不断搜索内存的某个部分
+# 事件处理器--程序中处理某类事件的那部分代码--只关注 mouseClick 事件
+
+
+# 定时器事件（timer event）
+# 用户自定义事件（user-defined event）
+pygame.time.set_timer(ECENT_NUMBER,interval)
+
+import pygame
+# Pygame 模块中已经使用了 0-23 的事件编号
+pygame.USEREVENT -- 24
+
+import pygame
+# 可使用的范围是 0-31
+pygame.NUMEVENTS -- 32
+
+
+import pygame,sys
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+background = pygame.Surface(screen.get_size())
+background.fill([255,255,230])
+clock = pygame.time.Clock()
+
+class Ball(pygame.sprite.Sprite):
+    def __init__(self,image_file,location,speed):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left , self.rect.top = location
+        self.speed = speed
+
+    def move(self):
+        if self.rect.left <= screen.get_rect().left or \
+                self.rect.right >= screen.get_rect().right:
+            self.speed[0] = -self.speed[0]
+        newpos = self.rect.move(self.speed)
+        self.rect = newpos
+
+# 重复按键
+# delay 是知道在开始重复前需要延迟多久
+# interval 是重复过程中每次重复的间隔时间
+delay = 1000
+interval = 10
+pygame.key.set_repeat(delay, interval)
+
+# 对拖动的鼠标定义
+held_down = False
+
+# 对定时器定义
+pygame.time.set_timer(pygame.USEREVENT,1000)
+direction = 1
+
+my_ball = Ball("beach_ball.png",[20,20],[10,0])
+running = True
+while running:
+    # pygame.event.get() 方法会从事件队列中获取包含所有事件的列表
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.USEREVENT:
+            my_ball.rect.centery = my_ball.rect.centery + (30*direction)
+            if my_ball.rect.top <= 0 or \
+                     my_ball.rect.bottom >= screen.get_rect().bottom:
+                direction = -direction
+        # #鼠标事件 -- 用鼠标移动沙雕球
+        # # 赋予实现的可能
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     held_down = True
+        # elif event.type == pygame.MOUSEBUTTONUP:
+        #     held_down = False
+        # elif event.type == pygame.MOUSEMOTION:
+        #     if held_down:
+        #         # 真正的实现
+        #         my_ball.rect.center = event.pos
+
+        # #键盘事件 -- 按按键让球上下移动
+        # elif event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_UP:
+        #         my_ball.rect.top = my_ball.rect.top - 10
+        #     elif event.key == pygame.K_DOWN:
+        #         my_ball.rect.top = my_ball.rect.top + 10
+
+# ----------补充常用事件-----------
+#    QUIT、KEYDOWN、KEYUP、MOUSEMOTION、MOUSEBUTTONUP、MOUSEBUTONDOWN
+#    K_a、K_b .......
+#    K_SPACE   K_ESCAPE
+# ----------补充常用事件-----------
+
+    clock.tick(30)
+    screen.blit(background,(0,0))
+    my_ball.move()
+    screen.blit(my_ball.image,my_ball.rect)
+    pygame.display.flip()
+pygame.quit
+
+
+
+# PyPong 游戏
+import pygame,sys
+
+class Ball(pygame.sprite.Sprite):
+    def __init__(self,image_file,speed,location):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left , self.rect.top = location
+        self.speed = speed
+
+    def move(self):
+        # 命名空间 -- 把下面的变量变成全局
+        global score,score_surf,score_font
+        self.rect = self.rect.move(self.speed)
+        # 在窗口左右反弹
+        if self.rect.left < 0 or self.rect.right > screen.get_width():
+            self.speed[0] = -self.speed[0]
+        # 碰到上界反弹
+        if self.rect.top <= 0:
+            self.speed[1] = -self.speed[1]
+            score += 1
+            score_surf = score_font.render(str(score),1,(0,0,0))
+
+class Paddle(pygame.sprite.Sprite):
+    def __init__(self,location = [0,0]):
+        pygame.sprite.Sprite.__init__(self)
+        # 为球拍创建表面
+        image_surface = pygame.surface.Surface([100,20])
+        # 用 黑色 去填充表面
+        image_surface.fill([0,0,0])
+        # 每个 动画精灵 都需要 image属性，
+        # 用 surface.convert() 方法把表面转换为图像
+        self.image = image_surface.convert()
+        self.rect = self.image.get_rect()
+        self.rect.left , self.rect.top = location
+
+pygame.init()
+screen = pygame.display.set_mode([640,480])
+clock = pygame.time.Clock()
+# 赋予 球图像，速度，起始位置
+myBall = Ball('wackyball.bmp',[10,5],[50,50])
+# 为之后 球 与 球拍 的碰撞做准备
+ballGroup = pygame.sprite.Group(myBall)
+paddle = Paddle([270,400])
+lives = 3
+score = 0
+# 显示玩家分数的方法 -- font模块
+# 创建字体对象，None：默认字体样式
+score_font = pygame.font.Font(None,50)
+# 渲染文本到 score_surf 表面
+score_surf = score_font.render(str(score),1,(0,0,0))
+# 设置文本位置
+score_pos = [10,10]
+# 鼠标事件
+done = False
+
+running = True
+while running:
+    clock.tick(30)
+    screen.fill([255,255,230])
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        # 检测鼠标运动，移动球拍
+        elif event.type == pygame.MOUSEMOTION:
+            # event.pos[0] -- 表示鼠标 x轴 移动的坐标
+            paddle.rect.centerx = event.pos[0]
+    # 检查球与球拍之间的碰撞
+    if pygame.sprite.spritecollide(paddle,ballGroup,False):
+        myBall.speed[1] = -myBall.speed[1]
+    myBall.move()
+    if not done:
+        screen.blit(myBall.image,myBall.rect)
+        screen.blit(paddle.image,paddle.rect)
+        screen.blit(score_surf,score_pos)
+        for i in range(lives):
+            width = screen.get_width()
+            # 重置 生命球的位置
+            screen.blit(myBall.image,[width - 40*i,20])
+        pygame.display.flip()
+    # screen 是表面，其中不包含 rect 属性，
+    # 但可以用 get_rect() 得到一个包含函数表面的 rect 对象
+    if myBall.rect.top >= screen.get_rect().bottom:
+        lives -= 1
+        if lives == 0:
+            final_text1 = "Game Over"
+            final_text2 = "Your final score is:" + str(score)
+            ft1_font = pygame.font.Font(None,70)
+            ft1_surf = ft1_font.render(final_text1, 1, (0, 0, 0))
+            ft2_font = pygame.font.Font(None,50)
+            ft2_surf = ft2_font.render(final_text2, 1, (0, 0, 0))
+            # 将文本在窗口居中
+            screen.blit(ft1_surf,[screen.get_width()//2 -\
+                        ft1_surf.get_width()//2, 100])
+            screen.blit(ft2_surf, [screen.get_width() // 2 - \
+                        ft2_surf.get_width()//2, 200])
+            pygame.display.flip()
+            done = True
+        else:
+            pygame.time.delay(2000)
+            myBall.rect.topleft = [50,50] #[screen.get_rect().width - 40*lives,20]
+pygame.quit
