@@ -1,0 +1,262 @@
+# 换行
+# python 执行 print 时，会自动在新的一行开始
+print("Hi")
+print("There")
+print() # 空一行的作用 或者 用 \n 换行
+print("Hi \nThere")
+print("Hi",end="")
+print("There")
+print("Hi" + "There")
+# Hi
+# There
+
+# Hi
+# There
+# HiThere
+# HiThere
+print("Hi","There")
+# Hi There
+# \\ 可以打印出 \
+
+
+
+
+# 在字符串中插入变量
+name = "Warren Sande"
+print("My name is",name,"and I wrote this book.")
+
+name = "Warren Sande"
+print("My name is %s and I wrote this book"% name)
+
+
+# 数字格式化
+（1）一般性
+number = -12.678906949
+print("%i"% number) # 打印整数
+print("%d"% number)
+print("%f"% number) # 只等带6个小数（最后一位也将四舍五入）
+print("%.2f"% number) # 会四舍五入保留到所需要的小数位
+print("%.8f"% number) # 最后一位也将四舍五入
+print("%+f"% number) # 显示正号（如果是非负数的话）
+print("% .2f"% number) # 是负数就显示符号，其余的照旧一样
+# -12
+# -12
+# -12.678907
+# -12.68
+# -12.67890695
+# -12.678907
+# -12.68
+
+（2）E记法 与 G记法
+number = 12.3459
+print("%e"% number)
+print("%.3e"% number) # 不会 四舍五入 算入的！
+print("%.8e"% number) # 缺的数字就补0
+# 会判断是否过大，太大之后就会采用 E记法
+number1 = 12.3
+number2 = 456712345.6
+print("%g"% number1)
+print("%g"% number2)
+# 1.234590e+01
+# 1.235e+01
+# 1.23459000e+01
+# 12.3
+# 4.56712e+08
+
+# 纯 .f 是直接四舍五入保留到整数位
+# 用两个 % 夹住它，就可以打印 %
+math = 75.9
+science = 82.6
+print("I got %.lf%% in math and %.2lf%% in science"% (math,science))
+# I got 76% in math and 82.60% in science
+
+distance = 149597870700
+myString =  f"The sun is {distance:.4e} meters from the earth"
+print(myString)
+print(f"The sun is {distance} meters from the earth") # f的作用是像只有有 % 那样工作
+# The sun is 1.4960e+11 meters from the earth
+# The sun is 149597870700 meters from the earth
+
+
+
+# 分离字符串
+name_string = "Sam,Brad,Alex,Cameron,Toby,Gwen,Jenn,Connor"
+names = name_string.split(",Toby,") # 引号里的内容全都不会保留
+print(names)
+for name in names:
+        print(name)
+
+# ['Sam,Brad,Alex,Cameron', 'Gwen,Jenn,Connor']
+# Sam,Brad,Alex,Cameron
+# Gwen,Jenn,Connor
+
+
+
+# 拼接字符串
+word_list = ['My','name','is','Warren']
+# ' ' 里面写插入的东西，这里是空格
+# join 是关键字
+long_string = ' '.join(word_list)
+print(long_string)
+# My name is Warren
+
+
+
+# 搜索字符串
+# 开头 与 结尾
+name = "Frenkenstein"
+if name.startswith("Frenk"):
+    print("Can I call you Frenk?")
+name.endswith("stein")
+name.endswith("stone")
+
+# 中间
+# 关键字 in 只能查找是否存在，不能确定位置
+addr1 = '657 Maple Lane'
+if 'Maple' in addr1:
+    print("1")
+else:
+    print("0")
+
+# 关键字 index 可以确定位置
+addr2 = '657 Maple Lane'
+if 'Maple' in addr2:
+    position = addr2.index("Maple")
+    print("Found 'Maple' at index",position) # 4
+# 657 Maple Lane
+# 01234
+
+
+
+# 删除字符串的一部分
+name = 'Warren Sande'
+short_name = name.strip('de')
+print(short_name) # Warren San
+
+
+
+# 大小写变化
+string1 = "Hello"
+string2 = "hello"
+string1_1 = string1.lower() # 全部都变成小写
+string2_2 = string2.upper() # 全部都变成大写
+print(string1_1) # hello
+print(string2_2) # HELLO
+
+
+
+# Hangman游戏
+import sys,random
+from PyQt5 import Qtwidgets ,uic
+form_class = uic.loadUiType("hangman.ui")[0]
+
+# 查找字母
+def find_letters(letter,a_string):
+    location = []
+    start = 0
+    while a_string.find(letter,start,len(a_string)) != -1:
+        location = a_string.find(letter,start,len(a_string))
+        locations.append(location)
+        start = location + 1
+    return locations
+
+# 当玩家猜对字母时，用字母替换-
+def replace_letters(string,location,letter):
+    new_string = ''
+    for i in range (0,len(string)):
+        if i in locations:
+            new_string = new_string + string
+        else:
+            new_string = new_string + string[i]
+    return new_string
+
+# 程序开始时，用横线替换相应的字母
+def dashes(word):
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    new_string = ''
+    for i in word:
+        if i in leffters:
+            new_string += "-"
+        else:
+            new_string += i
+    return new_string
+
+class HangmanGame(QtWidges.QMainWindow,form_class):
+    def __init__(self, parent = None):
+        QtWidges.QMainWindows.__init__(self,parent)
+        self.setupUi(self)
+        # 连接事件处理器
+        self.btn_guess.clicked.connect(self.btn_guess_clicked)
+        self.actionExit.trigged.connect(self.menuExit_selected)
+        # 游戏角色部分
+        self.pieces = [self.head,self.body,self.leftarm,self.leftleg,
+                       self.rightarm,self.rightleg]
+        # 绞刑架部分
+        self.gallows = [self.line1,self.line2,self.line3,self.line4]
+        self.pieces_shown = 0
+        self.currentword = ""
+        # 得到词汇表
+        f = open ("words.txt",'r')
+        self.lines = f.readlines()
+        f.close()
+        self.new_game()
+    
+    def new_game(self):
+        self.guesses.setText("")
+        # 从列表中随机选一个单词
+        self.currentword = random.choice(self.lines)
+        self.currentword = self.currentword.strip()
+        for i in self.pieces:
+            # 隐藏游戏角色
+            i.setFrameShadow(Qtwidgets.QFrame.Plain)
+            i.setHidden(True)
+        for i in self.gallows:
+            i.setFrameShadow(QtWidges.QFrame.Plain)
+        # 调用函数，用横线替换字母
+        self.word.setText(dashes(self.currentword))
+        self.pieces_shown = 0
+    def btn_guess_clicked(self):
+        guess = str(self.guessBox.text ())
+        if str(self.guesses.text()) != "":
+            self.guesses.setText(str(self.guesses.text()) + "," + guess)
+        else:
+            self.guesses.setText(guess)
+        # 猜字母
+        if len(guess) == 1:
+            if guess in self.currentword:
+                locations = find_letters(guess,self.currentword)
+                self.word.setText(replace_letters(str(self.word.text()),location,guess))
+                if str(self.word.text()) == self.currentword:
+                    self.win()
+            else:
+                self.wrong()
+        # 猜单词
+        else:
+            if guess == self.currentword:
+                self.win()
+            else:
+                self.wrong()
+        self.guessBox.setText("")
+    # 当玩家猜对时，显示对话框
+    def win(self):
+        QtWidgets.QMessageBox.imformation(self,"Hangman","You win !")
+        self.new_game()
+    # 猜错的情况
+    def wrong(self):
+        self.pieces_shown += 1
+        # 显示游戏角色的另一部分
+        for i in range(self.pieces_shown):
+            self.pieces[i].setHidden(False)
+        if self.pieces_shown == len(self.pieces):
+            # 玩家输了
+            message = "You lose. The word was " + self.currentword
+            QtWidgets.QMessageBox.warning(self,"Hangman",message)
+            self.new_game()
+    def menuExit_selected(self):
+        self.close()
+
+app = QtWidges.QApplication(sys.argv)
+myapp = HangmanGame(None)
+myapp.show()
+app.exec_()
+            
